@@ -3,7 +3,7 @@
 # Remove comments and add values where applicable.
 # The descriptions below should be self-explanatory
 
-title: "Helping You Write Academic Papers in R using Texevier"
+title: "Data Science Project"
 #subtitle: "This will appear as Right Header"
 
 documentclass: "elsarticle"
@@ -75,7 +75,7 @@ csl: Tex/harvard-stellenbosch-university.csl # referencing format used.
 # ---------- General:
 RemovePreprintSubmittedTo: TRUE  # Removes the 'preprint submitted to...' at bottom of titlepage
 Journal: "Journal of Finance"   # Journal that the paper will be submitting to, if RemovePreprintSubmittedTo is set to TRUE.
-toc: FALSE                       # Add a table of contents
+toc: TRUE                       # Add a table of contents
 numbersections: TRUE             # Should sections (and thus figures and tables) be numbered?
 fontsize: 11pt                  # Set fontsize
 linestretch: 1.2                # Set distance between lines.

@@ -50,3 +50,8 @@ rsconnect/
 
 # Always ignore DATA
 /data
+
+# produced vignettes - Same as above, but changed location
+*.html
+*.pdf
+*.png
