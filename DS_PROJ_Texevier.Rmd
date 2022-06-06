@@ -88,7 +88,6 @@ link-citations: TRUE            # This creates dynamic links to the papers in re
 output:
   pdf_document:
     keep_tex: TRUE
-    keep_md: TRUE
     template: Tex/TexDefault.txt
     fig_width: 3.5 # Adjust default figure sizes. This can also be done in the chunks of the text.
     fig_height: 3.5
@@ -136,7 +135,7 @@ library(tidyverse)
 
 <!-- To reference a section, you have to set a label using ``\\label'' in R, and then reference it in-text as e.g. referencing a later section, Section \ref{Meth}. -->
 
-Writing in Rmarkdown is surprizingly easy - see [this website](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf) cheatsheet for a summary on writing Rmd writing tips.
+<!-- Writing in Rmarkdown is surprizingly easy - see [this website](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf) cheatsheet for a summary on writing Rmd writing tips. -->
 
 # Data  {-}
 

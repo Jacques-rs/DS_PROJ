@@ -370,7 +370,6 @@ $abstract$
 }
 \end{abstract}
 $endif$
-
 \vspace{1cm}
 
 
@@ -396,8 +395,10 @@ $endif$
 
 
 $if(toc)$
+\newpage
 \renewcommand{\contentsname}{Table of Contents}
 {\tableofcontents}
+\newpage
 $endif$
 
 %________________________
