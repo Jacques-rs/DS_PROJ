@@ -137,6 +137,7 @@ library(tidyverse)
 
 <!-- Writing in Rmarkdown is surprizingly easy - see [this website](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf) cheatsheet for a summary on writing Rmd writing tips. -->
 
+
 # Data  {-}
 
 Notice how I used the curly brackets and dash to remove the numbering of the data section.
@@ -370,7 +371,8 @@ huxreg(lm1, lm2, lm3,
   set_label(Label)
 # More settings:
 font_size(htab) <- 12
-# Let's change regression names: this is slightly hacky, but works. Comment out this section to see what the default looks like:
+# Let's change regression names: this is slightly hacky, but works.
+# Comment out this section to see what the default looks like:
   Names <- c( "Reg1", "Reg2", "Reg3")
   for(i in 1:length(Names)) {
     htab[1,][[1+i]] <- Names[i]
