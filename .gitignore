@@ -55,3 +55,6 @@ rsconnect/
 *.html
 *.pdf
 *.png
+
+# Jupyter checkpoint files
+.ipynb_checkpoints/
