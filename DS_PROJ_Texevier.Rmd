@@ -106,13 +106,44 @@ knitr::opts_chunk$set(echo = FALSE,
                       fig.pos="H", 
                       fig.pos = 'H')
 
-
-
+# Install packages
+library(pacman)
+pacman::p_load(reticulate)
+reticulate::conda_python("C:/Users/gerar/miniconda3/envs/DS_prac/")
 ```
 
 
+<!-- Check the current python version running -->
 
-```{r test_py, engine="python"}
-
+```{python}
+from platform import python_version
+python_version()
 ```
+
+# Import/Install Packages
+
+```{python}
+import sys
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import os
+import sklearn
+```
+
+# Importing the dataset
+
+```{python}
+
+def view_files():
+    path = os.getcwd()
+    path = f"{path}\data"
+    return(os.listdir(path))
+
+files = view_files()
+files
+```
+
+
 
