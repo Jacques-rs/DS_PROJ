@@ -108,9 +108,20 @@ knitr::opts_chunk$set(echo = FALSE,
 
 # Install packages
 library(pacman)
+
+# use_python("C:/Users/gerar/miniconda3/envs/DS_prac/python.exe")
+# conda_python("DS_prac")
+# Sys.setenv(RETICULATE_PYTHON = "/Users/gerar/miniconda3/envs/DS_prac/python.exe")
+# RETICULATE_PYTHON="C:/Users/gerar/miniconda3/envs/DS_prac/python.exe"
 pacman::p_load(reticulate)
-reticulate::conda_python("C:/Users/gerar/miniconda3/envs/DS_prac/")
+# use_condaenv(condaenv = "/Users/gerar/miniconda3/envs/DS_prac/python")
+#C:\Users\gerar\miniconda3
+py_config()
+py_numpy_available()
+py_list_packages()
+
 ```
+
 
 
 <!-- Check the current python version running -->
@@ -134,16 +145,38 @@ import sklearn
 
 # Importing the dataset
 
+
+
 ```{python}
 
+python_version()
 def view_files():
+    
     path = os.getcwd()
+    
     path = f"{path}\data"
+    
     return(os.listdir(path))
 
 files = view_files()
+
 files
 ```
 
 
+```{python}
+def check_file(i):  
+    #grab the file path from which to import the dataset
+    path = os.getcwd()
+    path = f"{path}\data"
+    path = f"{path}\{files[i]}"
+    return(path)
+check_file(3)
+```
+
+```{python echo=TRUE}
+
+check_file(3)
+
+```
 
