@@ -113,7 +113,7 @@ library(pacman)
 # conda_python("DS_prac")
 # Sys.setenv(RETICULATE_PYTHON = "/Users/gerar/miniconda3/envs/DS_prac/python.exe")
 # RETICULATE_PYTHON="C:/Users/gerar/miniconda3/envs/DS_prac/python.exe"
-pacman::p_load(reticulate)
+pacman::p_load(reticulate, tidyverse, dplyr)
 # use_condaenv(condaenv = "/Users/gerar/miniconda3/envs/DS_prac/python")
 #C:\Users\gerar\miniconda3
 py_config()
@@ -131,7 +131,7 @@ from platform import python_version
 python_version()
 ```
 
-# Import/Install Packages
+# Import Packages
 
 ```{python}
 import sys
@@ -178,5 +178,121 @@ check_file(3)
 
 check_file(3)
 
+```
+
+
+```{r}
+    
+df <- read_csv("./data/absa_jup.csv", show_col_types = F)
+l_names <- c("L_DEPOSITS_DENOMINATED_IN_RAND_TOTAL" = "Deposits Rand",
+             "L_DEPOSITS_DENOMINATED_IN_FOREIGN_CURRENCY_TOTAL" = "Deposits Foreign",
+             "L_OTHER_BORROWED_FUNDS_TOTAL" = "Other Borrowed Funds",
+             "L_FOREIGN_CURRENCY_FUNDING_TOTAL" = "Foreign Funding",
+             "L_OTHER_LIABILITIES_TO_THE_PUBLIC_TOTAL" = "Other to Public",
+             "L_OTHER_LIABILITIES_TOTAL"  = "Other")
+
+p1 <- df %>%
+    select(Date, starts_with("L_")) %>% 
+    gather(Liability, Value, 2:7) %>%
+    ggplot() +
+    geom_line(aes(x = Date, y = cumsum(Value)/1000000,
+                  color = Liability), size=0.8) +
+    facet_wrap(~Liability, scales = "free_y", ncol=2, 
+               labeller = as_labeller(l_names)) +
+    # scale_color_hue(labels = element_blank()) +
+    # scale_linetype_discrete(labels = element_blank()) +
+    guides(col = 'none', linetype = "none") +
+    scale_y_continuous(name = "Liability Value (Billions)") +
+    labs(title = "Monthly Liability Items in the Absa Ltd Balance Sheet")
+
+p1
+
+ 
+```
+
+```{r}
+df <- read_csv("./data/absa_jup.csv", show_col_types = F)
+l_names <- c("A_CENTRAL_BANK_MONEY_AND_GOLD_TOTAL_ASSETS" = "CB Money & Gold",
+                "A_DEPOSITS_LOANS_AND_ADVANCES_TOTAL_ASSETS" = 
+                "Deposits, Loans, and Advances",
+                "A_INVESTMENTS_AND_BILLS_including_trading_portfolio_assets_TOTAL_ASSETS" = 
+    "Investments & Bills",
+                "A_NON-FINANCIAL_ASSETS_TOTAL_ASSETS" = 
+        "Non-Financial Assets",
+                "A_OTHER_ASSETS_TOTAL_ASSETS" = "Other Assets",
+                "E_TOTAL_EQUITY_TOTAL" = "Total Equity")
+
+p1 <- df %>%
+    select(Date, starts_with("A_"), starts_with("E_")) %>% 
+    gather(Asset, Value, -1) %>%
+    ggplot() +
+    geom_line(aes(x = Date, y = cumsum(Value)/1000000,
+                  color = Asset), size=0.8) +
+    facet_wrap(~Asset, scales = "free_y", ncol=2, 
+               labeller = as_labeller(l_names)) +
+    # scale_color_hue(labels = element_blank()) +
+    # scale_linetype_discrete(labels = element_blank()) +
+    guides(col = 'none', linetype = "none") +
+    scale_y_continuous(name = "Asset Value (Billions)") +
+    labs(title = "Monthly Asset Items in the Absa Ltd Balance Sheet")
+
+p1
+# ggsave("./figures/missing_totals.png")
+
+```
+
+
+```{r}
+df <- read_csv("./data/banks_data", show_col_types = F)
+l_names <- c("L_DEPOSITS_DENOMINATED_IN_RAND_TOTAL" = "Deposits Rand",
+             "L_DEPOSITS_DENOMINATED_IN_FOREIGN_CURRENCY_TOTAL" = "Deposits Foreign",
+             "L_OTHER_BORROWED_FUNDS_TOTAL" = "Other Borrowed Funds",
+             "L_FOREIGN_CURRENCY_FUNDING_TOTAL" = "Foreign Funding",
+             "L_OTHER_LIABILITIES_TO_THE_PUBLIC_TOTAL" = "Other to Public",
+             "L_OTHER_LIABILITIES_TOTAL"  = "Other")
+
+p1 <- df %>%
+    select(Date, starts_with("L_")) %>% 
+    gather(Liability, Value, 2:7) %>%
+    ggplot() +
+    geom_line(aes(x = Date, y = cumsum(Value)/1000000,
+                  color = Liability), size=0.8) +
+    facet_wrap(~Liability, scales = "free_y", ncol=2, 
+               labeller = as_labeller(l_names)) +
+    # scale_color_hue(labels = element_blank()) +
+    # scale_linetype_discrete(labels = element_blank()) +
+    guides(col = 'none', linetype = "none") +
+    scale_y_continuous(name = "Liability Value (Billions)")
+
+p1
+```
+
+```{r}
+df <- read_csv("./data/banks_data.csv", show_col_types = F)
+l_names <- c("A_CENTRAL_BANK_MONEY_AND_GOLD_TOTAL_ASSETS" = "CB Money & Gold",
+                "A_DEPOSITS_LOANS_AND_ADVANCES_TOTAL_ASSETS" = 
+                "Deposits, Loans, and Advances",
+                "A_INVESTMENTS_AND_BILLS_including_trading_portfolio_assets_TOTAL_ASSETS" = 
+    "Investments & Bills",
+                "A_NON-FINANCIAL_ASSETS_TOTAL_ASSETS" = 
+        "Non-Financial Assets",
+                "A_OTHER_ASSETS_TOTAL_ASSETS" = "Other Assets",
+                "E_TOTAL_EQUITY_TOTAL" = "Total Equity")
+
+p1 <- df %>%
+    select(Date, starts_with("A_"), starts_with("E_")) %>% 
+    gather(Asset, Value, -1) %>%
+    ggplot() +
+    geom_line(aes(x = Date, y = cumsum(Value)/1000000,
+                  color = Asset), size=0.8) +
+    facet_wrap(~Asset, scales = "free_y", ncol=2, 
+               labeller = as_labeller(l_names)) +
+    # scale_color_hue(labels = element_blank()) +
+    # scale_linetype_discrete(labels = element_blank()) +
+    guides(col = 'none', linetype = "none") +
+    scale_y_continuous(name = "Asset Value (Billions)") +
+    labs(title = "Monthly Asset Items in the Top Six Banks' Balance Sheet")
+
+p1
 ```
 
