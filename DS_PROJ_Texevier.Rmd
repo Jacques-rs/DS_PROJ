@@ -113,7 +113,7 @@ library(pacman)
 # conda_python("DS_prac")
 # Sys.setenv(RETICULATE_PYTHON = "/Users/gerar/miniconda3/envs/DS_prac/python.exe")
 # RETICULATE_PYTHON="C:/Users/gerar/miniconda3/envs/DS_prac/python.exe"
-pacman::p_load(reticulate, tidyverse, dplyr)
+pacman::p_load(reticulate, tidyverse, dplyr, corrplot)
 # use_condaenv(condaenv = "/Users/gerar/miniconda3/envs/DS_prac/python")
 #C:\Users\gerar\miniconda3
 py_config()
@@ -126,59 +126,54 @@ py_list_packages()
 
 <!-- Check the current python version running -->
 
-```{python}
-from platform import python_version
-python_version()
-```
-
 # Import Packages
 
-```{python}
-import sys
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
-import os
-import sklearn
-```
+<!-- ```{python} -->
+<!-- import sys -->
+<!-- import pandas as pd -->
+<!-- import numpy as np -->
+<!-- import matplotlib.pyplot as plt -->
+<!-- import matplotlib.dates as mdates -->
+<!-- import os -->
+<!-- import sklearn -->
+<!-- ``` -->
 
 # Importing the dataset
 
 
 
-```{python}
+<!-- ```{python} -->
 
-python_version()
-def view_files():
-    
-    path = os.getcwd()
-    
-    path = f"{path}\data"
-    
-    return(os.listdir(path))
+<!-- python_version() -->
+<!-- def view_files(): -->
 
-files = view_files()
+<!--     path = os.getcwd() -->
 
-files
-```
+<!--     path = f"{path}\data" -->
+
+<!--     return(os.listdir(path)) -->
+
+<!-- files = view_files() -->
+
+<!-- files -->
+<!-- ``` -->
 
 
-```{python}
-def check_file(i):  
-    #grab the file path from which to import the dataset
-    path = os.getcwd()
-    path = f"{path}\data"
-    path = f"{path}\{files[i]}"
-    return(path)
-check_file(3)
-```
+<!-- ```{python} -->
+<!-- def check_file(i):   -->
+<!--     #grab the file path from which to import the dataset -->
+<!--     path = os.getcwd() -->
+<!--     path = f"{path}\data" -->
+<!--     path = f"{path}\{files[i]}" -->
+<!--     return(path) -->
+<!-- check_file(3) -->
+<!-- ``` -->
 
-```{python echo=TRUE}
+<!-- ```{python echo=TRUE} -->
 
-check_file(3)
+<!-- check_file(3) -->
 
-```
+<!-- ``` -->
 
 
 ```{r}
@@ -234,7 +229,7 @@ p1 <- df %>%
     # scale_linetype_discrete(labels = element_blank()) +
     guides(col = 'none', linetype = "none") +
     scale_y_continuous(name = "Asset Value (Billions)") +
-    labs(title = "Monthly Asset Items in the Absa Ltd Balance Sheet")
+    labs(title = "Asset Items in the Absa Ltd Balance Sheet")
 
 p1
 # ggsave("./figures/missing_totals.png")
@@ -243,7 +238,7 @@ p1
 
 
 ```{r}
-df <- read_csv("./data/banks_data", show_col_types = F)
+df <- read_csv("./data/banks_data.csv", show_col_types = F)
 l_names <- c("L_DEPOSITS_DENOMINATED_IN_RAND_TOTAL" = "Deposits Rand",
              "L_DEPOSITS_DENOMINATED_IN_FOREIGN_CURRENCY_TOTAL" = "Deposits Foreign",
              "L_OTHER_BORROWED_FUNDS_TOTAL" = "Other Borrowed Funds",
@@ -262,7 +257,10 @@ p1 <- df %>%
     # scale_color_hue(labels = element_blank()) +
     # scale_linetype_discrete(labels = element_blank()) +
     guides(col = 'none', linetype = "none") +
-    scale_y_continuous(name = "Liability Value (Billions)")
+    scale_y_continuous(name = "Liability Value (Billions)") +
+    scale_x_date("Date (Monthly)")+
+    labs(title = "Liabilities in the Top 6 Banks' Balance Sheet",
+         subtitle = "Aggregated for all banks")
 
 p1
 ```
@@ -291,8 +289,125 @@ p1 <- df %>%
     # scale_linetype_discrete(labels = element_blank()) +
     guides(col = 'none', linetype = "none") +
     scale_y_continuous(name = "Asset Value (Billions)") +
-    labs(title = "Monthly Asset Items in the Top Six Banks' Balance Sheet")
+    scale_x_date("Date (Months)") +
+    labs(title = "Assets & Equity in the Top Six Banks' Balance Sheet",
+         )
 
 p1
+```
+
+Next, all these variables are plotted as their differenced values.
+
+```{r}
+df <- read_csv("./data/banks_data.csv", show_col_types = F)
+l_names <- c("L_DEPOSITS_DENOMINATED_IN_RAND_TOTAL" = "Deposits Rand",
+             "L_DEPOSITS_DENOMINATED_IN_FOREIGN_CURRENCY_TOTAL" = "Deposits Foreign",
+             "L_OTHER_BORROWED_FUNDS_TOTAL" = "Other Borrowed Funds",
+             "L_FOREIGN_CURRENCY_FUNDING_TOTAL" = "Foreign Funding",
+             "L_OTHER_LIABILITIES_TO_THE_PUBLIC_TOTAL" = "Other to Public",
+             "L_OTHER_LIABILITIES_TOTAL"  = "Other")
+
+p1 <- df %>%
+    select(Date, starts_with("L_")) %>% 
+    gather(Liability, Value, 2:7) %>%
+    ggplot() +
+    geom_line(aes(x = Date, y = Value/1000000,
+                  color = Liability), size=0.8) +
+    facet_wrap(~Liability, scales = "free_y", ncol=2, 
+               labeller = as_labeller(l_names)) +
+    # scale_color_hue(labels = element_blank()) +
+    # scale_linetype_discrete(labels = element_blank()) +
+    guides(col = 'none', linetype = "none") +
+        scale_x_date("Date (Months)") +
+    scale_y_continuous(name = "Change in Liabilities (Billions)")
+
+p1
+```
+
+```{r}
+df <- read_csv("./data/banks_data.csv", show_col_types = F)
+l_names <- c("A_CENTRAL_BANK_MONEY_AND_GOLD_TOTAL_ASSETS" = "CB Money & Gold",
+                "A_DEPOSITS_LOANS_AND_ADVANCES_TOTAL_ASSETS" = 
+                "Deposits, Loans, and Advances",
+                "A_INVESTMENTS_AND_BILLS_including_trading_portfolio_assets_TOTAL_ASSETS" = 
+    "Investments & Bills",
+                "A_NON-FINANCIAL_ASSETS_TOTAL_ASSETS" = 
+        "Non-Financial Assets",
+                "A_OTHER_ASSETS_TOTAL_ASSETS" = "Other Assets",
+                "E_TOTAL_EQUITY_TOTAL" = "Total Equity")
+
+p1 <- df %>%
+    select(Date, starts_with("A_"), starts_with("E_")) %>% 
+    gather(Asset, Value, -1) %>%
+    ggplot() +
+    geom_line(aes(x = Date, y = Value/1000000,
+                  color = Asset), size=0.8) +
+    facet_wrap(~Asset, scales = "free_y", ncol=2, 
+               labeller = as_labeller(l_names)) +
+    # scale_color_hue(labels = element_blank()) +
+    # scale_linetype_discrete(labels = element_blank()) +
+    guides(col = 'none', linetype = "none") +
+    scale_x_date("Date (Months)") +
+    scale_y_continuous(name = "Asset Value (Billions)") +
+    
+    labs(
+        title = 
+             "Change in Assets & Equity for the Top Six Banks' Balance Sheet")
+
+p1
+```
+
+# Feature Importance
+
+```{r eval=FALSE, include=FALSE}
+df <- read_csv("./data/feature_imp_select.csv", show_col_types = F)
+#df
+
+df %>% 
+    mutate(Feature = factor(Feature, 
+                               levels = Feature[order(Importance)])) %>%
+    ggplot() +
+    geom_col(aes(x = Feature, y = Importance), fill = "steelblue") +
+    scale_x_discrete(breaks=c("L_OTHER_LIABILITIES_TOTAL",
+            "A_CENTRAL_BANK_MONEY_AND_GOLD_TOTAL_ASSETS",
+            "E_TOTAL_EQUITY_TOTAL",
+            "A_DEPOSITS_LOANS_AND_ADVANCES_TOTAL_ASSETS",
+            "A_INVESTMENTS_AND_BILLS_including_trading_portfolio_assets_TOTAL_ASSETS",
+            "L_FOREIGN_CURRENCY_FUNDING_TOTAL",
+            "A_NON-FINANCIAL_ASSETS_TOTAL_ASSETS",
+            "A_OTHER_ASSETS_TOTAL_ASSETS",
+            "L_OTHER_LIABILITIES_TO_THE_PUBLIC_TOTAL",
+            "L_DEPOSITS_DENOMINATED_IN_FOREIGN_CURRENCY_TOTAL",
+            "L_DEPOSITS_DENOMINATED_IN_RAND_TOTAL",
+            "L_OTHER_BORROWED_FUNDS_TOTAL"),
+        labels=c("Other\nLiabilities", "CB\nMoney\n& Gold", "Equity", 
+                 "Deposits\nLoans\nAdvances", "Investments\n&\nBills", 
+                 "Foreign\nFunding", "Non-\nFinancial\nAssets", "Other\nAssets", 
+                 "Public\nLibilities", "Foreign\nDeposits", "Rand\nDeposits",
+                 "Other\nBorrowed\nFunds")) +
+    theme(axis.text.x = element_text(color="steelblue", 
+                           size=8)) +
+    labs(title = "Feature Importance Bar Plot",
+         subtitle = "Negative: Exclution yields better model performance\nPositive: Feature should be included")
+
+#ggsave("./figures/Feature_imp_plot.png")
+
+```
+
+```{r}
+# cor_plot1 <- function(df){
+# 
+#     plot1 <- df %>% 
+#         cor(.) %>%
+#         corrplot(., method = "color", order = "hclust", tl.srt=0, diag = F,
+#                  tl.col = "black", addCoef.col = "black",
+#                  tl.pos = "l",
+#                  tl.cex = 0.8,
+#                  number.font = 8)
+# 
+#     return(plot2)
+# }
+# 
+# cor_plot1(df)
 ```
 
