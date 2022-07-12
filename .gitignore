@@ -53,10 +53,17 @@ rsconnect/
 
 # produced vignettes - Same as above, but changed location
 *.html
-*.pdf
+#*.pdf
 *.png
+/DS_PROJ_Texevier_files/figure-latex/*.pdf
 
 # Jupyter checkpoint files
 .ipynb_checkpoints/
+
+
 DS_PROJ_Texevier.tex
 DS_PROJ_Texevier.log
+DS_PROJ_Texevier.pdf
+
+# resources for understanding data
+/resources
